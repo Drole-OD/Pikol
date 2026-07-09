@@ -21,6 +21,7 @@ interface CourtWithMeta {
   numberOfCourts: number;
   surfaceType: string;
   amenities: string[];
+  images: string[];
   isOpen: boolean;
   availableSlots: number;
   distance: number | null;

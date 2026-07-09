@@ -1,5 +1,7 @@
 "use client";
 
+import { CameraIcon } from "@/components/icons";
+
 const AMENITY_LABELS: Record<string, string> = {
   lights: "Lights",
   restrooms: "Restrooms",
@@ -24,6 +26,7 @@ interface CourtCardProps {
     numberOfCourts: number;
     surfaceType: string;
     amenities: string[];
+    images: string[];
     isOpen: boolean;
     availableSlots: number;
     distance: number | null;
@@ -35,8 +38,20 @@ export default function CourtCard({ court, onSelect }: CourtCardProps) {
   return (
     <button
       onClick={() => onSelect(court.id)}
-      className="w-full text-left bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 transition-colors"
+      className="w-full text-left bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-gray-300 transition-colors"
     >
+      <div className="h-28 bg-gray-100 flex items-center justify-center text-gray-300">
+        {court.images[0] ? (
+          <img
+            src={court.images[0]}
+            alt={court.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <CameraIcon className="w-8 h-8" />
+        )}
+      </div>
+      <div className="p-4">
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 text-sm truncate">
@@ -81,6 +96,7 @@ export default function CourtCard({ court, onSelect }: CourtCardProps) {
             ? `${court.availableSlots} slots open`
             : "No slots today"}
         </span>
+      </div>
       </div>
     </button>
   );
