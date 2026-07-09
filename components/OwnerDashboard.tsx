@@ -1,8 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { ArrowLeftIcon, XIcon, CameraIcon, LocateIcon } from "@/components/icons";
+
+const LocationPicker = dynamic(() => import("@/components/LocationPicker"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-56 bg-gray-100 rounded-lg animate-pulse" />
+  ),
+});
 
 interface DayHours {
   open: string;
@@ -125,8 +133,8 @@ function emptyForm(): VenueFormState {
     name: "",
     address: "",
     phone: "",
-    lat: "30.2672",
-    lng: "-97.7431",
+    lat: "12.879700",
+    lng: "121.774000",
     surfaceType: "outdoor",
     amenities: [],
     operatingHours: defaultHours(),
@@ -673,7 +681,7 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-xs font-medium text-gray-600">
-                Coordinates (for the map)
+                Location
               </label>
               <button
                 type="button"
@@ -684,7 +692,21 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
                 Use my location
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <p className="text-xs text-gray-400 mb-2">
+              Click the map or drag the pin to set the exact spot.
+            </p>
+            <LocationPicker
+              lat={Number.isFinite(parseFloat(form.lat)) ? parseFloat(form.lat) : 12.8797}
+              lng={Number.isFinite(parseFloat(form.lng)) ? parseFloat(form.lng) : 121.774}
+              onChange={(lat, lng) =>
+                setForm((f) => ({
+                  ...f,
+                  lat: lat.toFixed(6),
+                  lng: lng.toFixed(6),
+                }))
+              }
+            />
+            <div className="grid grid-cols-2 gap-3 mt-2">
               <input
                 type="text"
                 value={form.lat}
