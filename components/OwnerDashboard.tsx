@@ -298,6 +298,17 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
     }
   };
 
+  const handleSetThumbnail = async (url: string, persist: boolean) => {
+    const nextImages = [url, ...form.images.filter((i) => i !== url)];
+    setForm((f) => ({ ...f, images: nextImages }));
+    if (persist && activeVenueId) {
+      await supabase
+        .from("courts")
+        .update({ images: nextImages })
+        .eq("id", activeVenueId);
+    }
+  };
+
   const applySameHours = (open: string, close: string) => {
     const hours = defaultHours();
     for (const key of DAY_KEYS) hours[key] = { open, close };
@@ -607,15 +618,31 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
       <div className="space-y-6">
         {/* Photos */}
         <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-gray-900 mb-2">Photos</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-1">Photos</h3>
+          <p className="text-xs text-gray-400 mb-2">
+            The thumbnail is shown for this establishment in the find courts
+            list. Hover a photo to make it the thumbnail.
+          </p>
           <div className="flex flex-wrap gap-2 mb-3">
-            {form.images.map((url) => (
+            {form.images.map((url, i) => (
               <div key={url} className="relative w-20 h-20 group">
                 <img
                   src={url}
                   alt=""
                   className="w-full h-full object-cover rounded-md"
                 />
+                {i === 0 ? (
+                  <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-600 text-white">
+                    Thumbnail
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => handleSetThumbnail(url, !isCreate)}
+                    className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-white/90 border border-gray-300 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Set as thumbnail
+                  </button>
+                )}
                 <button
                   onClick={() => handleRemoveImage(url, !isCreate)}
                   className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white border border-gray-300 text-gray-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
