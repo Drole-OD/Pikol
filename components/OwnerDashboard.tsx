@@ -106,11 +106,15 @@ interface VenueFormState {
   phone: string;
   lat: string;
   lng: string;
-  surfaceType: "indoor" | "outdoor";
   amenities: string[];
   operatingHours: OperatingHours;
   sameHours: boolean;
   images: string[];
+}
+
+interface PendingCourt {
+  name: string;
+  surfaceType: "indoor" | "outdoor";
 }
 
 function venueToForm(v: Venue): VenueFormState {
@@ -120,7 +124,6 @@ function venueToForm(v: Venue): VenueFormState {
     phone: v.phone,
     lat: String(v.lat),
     lng: String(v.lng),
-    surfaceType: v.surface_type === "mixed" ? "outdoor" : v.surface_type,
     amenities: v.amenities,
     operatingHours: v.operating_hours,
     sameHours: false,
@@ -135,7 +138,6 @@ function emptyForm(): VenueFormState {
     phone: "",
     lat: "12.879700",
     lng: "121.774000",
-    surfaceType: "outdoor",
     amenities: [],
     operatingHours: defaultHours(),
     sameHours: true,
@@ -162,6 +164,9 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
   const [units, setUnits] = useState<CourtUnit[]>([]);
   const [form, setForm] = useState<VenueFormState>(emptyForm());
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [pendingCourts, setPendingCourts] = useState<PendingCourt[]>([
+    { name: "Court 1", surfaceType: "outdoor" },
+  ]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -196,8 +201,35 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
   const openCreate = () => {
     setForm(emptyForm());
     setPendingId(crypto.randomUUID());
+    setPendingCourts([{ name: "Court 1", surfaceType: "outdoor" }]);
     setError("");
     setView("create");
+  };
+
+  const addPendingCourt = () => {
+    setPendingCourts((prev) => [
+      ...prev,
+      { name: `Court ${prev.length + 1}`, surfaceType: "outdoor" },
+    ]);
+  };
+
+  const updatePendingCourtName = (index: number, name: string) => {
+    setPendingCourts((prev) =>
+      prev.map((c, i) => (i === index ? { ...c, name } : c))
+    );
+  };
+
+  const updatePendingCourtSurface = (
+    index: number,
+    surfaceType: "indoor" | "outdoor"
+  ) => {
+    setPendingCourts((prev) =>
+      prev.map((c, i) => (i === index ? { ...c, surfaceType } : c))
+    );
+  };
+
+  const removePendingCourt = (index: number) => {
+    setPendingCourts((prev) => prev.filter((_, i) => i !== index));
   };
 
   const openManage = async (venue: Venue) => {
@@ -291,7 +323,7 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
     }));
   };
 
-  const validateForm = () => {
+  const validateForm = (checkCourts: boolean) => {
     if (!form.name.trim()) return "Establishment name is required";
     if (!form.address.trim()) return "Address is required";
     if (!form.phone.trim()) return "Phone is required";
@@ -299,11 +331,13 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
     const lng = parseFloat(form.lng);
     if (Number.isNaN(lat) || Number.isNaN(lng))
       return "Latitude and longitude must be numbers";
+    if (checkCourts && pendingCourts.length === 0)
+      return "Add at least one court";
     return "";
   };
 
   const handleCreate = async () => {
-    const validationError = validateForm();
+    const validationError = validateForm(true);
     if (validationError) {
       setError(validationError);
       return;
@@ -318,7 +352,8 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
       phone: form.phone.trim(),
       lat: parseFloat(form.lat),
       lng: parseFloat(form.lng),
-      surface_type: form.surfaceType,
+      // Placeholder — recomputed automatically from the courts inserted below.
+      surface_type: "outdoor",
       amenities: form.amenities,
       operating_hours: form.operatingHours,
       images: form.images,
@@ -330,20 +365,26 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
       setSaving(false);
       return;
     }
-    await supabase.from("court_units").insert({
-      court_id: id,
-      number: 1,
-      name: "Court 1",
-      is_active: true,
-      surface_type: form.surfaceType,
-    });
+    const courtsToInsert =
+      pendingCourts.length > 0
+        ? pendingCourts
+        : [{ name: "Court 1", surfaceType: "outdoor" as const }];
+    await supabase.from("court_units").insert(
+      courtsToInsert.map((c, i) => ({
+        court_id: id,
+        number: i + 1,
+        name: c.name.trim() || `Court ${i + 1}`,
+        is_active: true,
+        surface_type: c.surfaceType,
+      }))
+    );
     setSaving(false);
     backToList();
   };
 
   const handleSaveDetails = async () => {
     if (!activeVenueId) return;
-    const validationError = validateForm();
+    const validationError = validateForm(false);
     if (validationError) {
       setError(validationError);
       return;
@@ -606,10 +647,11 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
           </h3>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">
-              Establishment Name
+              Establishment Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
+              required
               value={form.name}
               onChange={(e) =>
                 setForm((f) => ({ ...f, name: e.target.value }))
@@ -620,10 +662,11 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">
-              Address
+              Address <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
+              required
               value={form.address}
               onChange={(e) =>
                 setForm((f) => ({ ...f, address: e.target.value }))
@@ -632,51 +675,34 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-800"
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
-                Phone
-              </label>
-              <input
-                type="text"
-                value={form.phone}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, phone: e.target.value }))
-                }
-                placeholder="(512) 555-0100"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-800"
-              />
-            </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Phone <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={form.phone}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, phone: e.target.value }))
+              }
+              placeholder="(512) 555-0100"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-800"
+            />
+          </div>
+          {!isCreate && (
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
                 Surface
               </label>
-              {isCreate ? (
-                <select
-                  value={form.surfaceType}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      surfaceType: e.target.value as "indoor" | "outdoor",
-                    }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-gray-800"
-                >
-                  <option value="outdoor">Outdoor</option>
-                  <option value="indoor">Indoor</option>
-                </select>
-              ) : (
-                <p className="px-3 py-2 border border-gray-200 rounded-md text-sm text-gray-500 bg-gray-50">
-                  {activeVenue ? SURFACE_LABELS[activeVenue.surface_type] : "—"}
-                </p>
-              )}
+              <p className="px-3 py-2 border border-gray-200 rounded-md text-sm text-gray-500 bg-gray-50">
+                {activeVenue ? SURFACE_LABELS[activeVenue.surface_type] : "—"}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Set per court below — the establishment shows Indoor & Outdoor
+                automatically when its courts differ.
+              </p>
             </div>
-          </div>
-          {!isCreate && (
-            <p className="text-xs text-gray-400">
-              Set per court below — the establishment shows Indoor & Outdoor
-              automatically when its courts differ.
-            </p>
           )}
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -853,24 +879,70 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
           )}
         </div>
 
-        {/* Courts management (only once venue exists) */}
-        {!isCreate && (
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-900">Courts</h3>
-              <button
-                onClick={handleAddUnit}
-                className="text-xs px-3 py-1.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
-              >
-                Add Court
-              </button>
-            </div>
-            {units.length === 0 ? (
-              <p className="text-xs text-gray-400 text-center py-4">
-                No courts yet — add one so players can book.
+        {/* Courts management */}
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-900">
+              Courts <span className="text-red-500">*</span>
+            </h3>
+            <button
+              onClick={isCreate ? addPendingCourt : handleAddUnit}
+              className="text-xs px-3 py-1.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+            >
+              Add Court
+            </button>
+          </div>
+
+          {isCreate ? (
+            pendingCourts.length === 0 ? (
+              <p className="text-xs text-red-500 text-center py-4 border border-red-100 bg-red-50 rounded-lg">
+                Add at least one court so players can book.
               </p>
             ) : (
-              <>
+              <div className="space-y-2">
+                {pendingCourts.map((c, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-wrap items-center gap-2 p-2 rounded-md border border-gray-200 bg-white"
+                  >
+                    <input
+                      type="text"
+                      value={c.name}
+                      onChange={(e) =>
+                        updatePendingCourtName(i, e.target.value)
+                      }
+                      className="flex-1 min-w-[100px] px-2 py-1.5 border border-gray-200 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-900"
+                    />
+                    <select
+                      value={c.surfaceType}
+                      onChange={(e) =>
+                        updatePendingCourtSurface(
+                          i,
+                          e.target.value as "indoor" | "outdoor"
+                        )
+                      }
+                      className="shrink-0 px-2 py-1.5 border border-gray-200 rounded-md text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-900"
+                    >
+                      <option value="outdoor">Outdoor</option>
+                      <option value="indoor">Indoor</option>
+                    </select>
+                    <button
+                      onClick={() => removePendingCourt(i)}
+                      className="shrink-0 text-gray-400 hover:text-red-600"
+                      aria-label="Remove court"
+                    >
+                      <XIcon className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )
+          ) : units.length === 0 ? (
+            <p className="text-xs text-gray-400 text-center py-4">
+              No courts yet — add one so players can book.
+            </p>
+          ) : (
+            <>
               <div className="space-y-2">
                 {units.map((unit) => (
                   <div
@@ -926,10 +998,9 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
                 Every court follows the establishment&apos;s available time
                 above.
               </p>
-              </>
-            )}
-          </div>
-        )}
+            </>
+          )}
+        </div>
 
         {/* Actions */}
         <div className="flex items-center justify-between">
