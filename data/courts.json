@@ -1,0 +1,202 @@
+[
+  {
+    "id": "1",
+    "name": "Zilker Park Pickleball Courts",
+    "address": "2100 Barton Springs Rd, Austin, TX 78704",
+    "lat": 30.2669,
+    "lng": -97.7728,
+    "phone": "(512) 974-6700",
+    "numberOfCourts": 4,
+    "surfaceType": "outdoor",
+    "amenities": ["lights", "restrooms", "water", "parking"],
+    "operatingHours": {
+      "mon": { "open": "06:00", "close": "22:00" },
+      "tue": { "open": "06:00", "close": "22:00" },
+      "wed": { "open": "06:00", "close": "22:00" },
+      "thu": { "open": "06:00", "close": "22:00" },
+      "fri": { "open": "06:00", "close": "22:00" },
+      "sat": { "open": "07:00", "close": "21:00" },
+      "sun": { "open": "07:00", "close": "21:00" }
+    }
+  },
+  {
+    "id": "2",
+    "name": "Austin Pickle Ranch",
+    "address": "9025 Research Blvd, Austin, TX 78758",
+    "lat": 30.3872,
+    "lng": -97.7268,
+    "phone": "(512) 555-0102",
+    "numberOfCourts": 8,
+    "surfaceType": "indoor",
+    "amenities": ["lights", "restrooms", "water", "parking", "pro-shop"],
+    "operatingHours": {
+      "mon": { "open": "07:00", "close": "21:00" },
+      "tue": { "open": "07:00", "close": "21:00" },
+      "wed": { "open": "07:00", "close": "21:00" },
+      "thu": { "open": "07:00", "close": "21:00" },
+      "fri": { "open": "07:00", "close": "22:00" },
+      "sat": { "open": "08:00", "close": "20:00" },
+      "sun": { "open": "08:00", "close": "20:00" }
+    }
+  },
+  {
+    "id": "3",
+    "name": "South Austin Recreation Center",
+    "address": "1100 Cumberland Rd, Austin, TX 78704",
+    "lat": 30.2402,
+    "lng": -97.7654,
+    "phone": "(512) 974-6790",
+    "numberOfCourts": 3,
+    "surfaceType": "outdoor",
+    "amenities": ["lights", "restrooms", "water"],
+    "operatingHours": {
+      "mon": { "open": "07:00", "close": "20:00" },
+      "tue": { "open": "07:00", "close": "20:00" },
+      "wed": { "open": "07:00", "close": "20:00" },
+      "thu": { "open": "07:00", "close": "20:00" },
+      "fri": { "open": "07:00", "close": "20:00" },
+      "sat": { "open": "08:00", "close": "18:00" },
+      "sun": { "open": "08:00", "close": "18:00" }
+    }
+  },
+  {
+    "id": "4",
+    "name": "Northwest Recreation Center",
+    "address": "2913 Northland Dr, Austin, TX 78757",
+    "lat": 30.3521,
+    "lng": -97.7389,
+    "phone": "(512) 974-6955",
+    "numberOfCourts": 6,
+    "surfaceType": "outdoor",
+    "amenities": ["lights", "restrooms", "water", "parking"],
+    "operatingHours": {
+      "mon": { "open": "06:00", "close": "21:00" },
+      "tue": { "open": "06:00", "close": "21:00" },
+      "wed": { "open": "06:00", "close": "21:00" },
+      "thu": { "open": "06:00", "close": "21:00" },
+      "fri": { "open": "06:00", "close": "21:00" },
+      "sat": { "open": "07:00", "close": "20:00" },
+      "sun": { "open": "07:00", "close": "20:00" }
+    }
+  },
+  {
+    "id": "5",
+    "name": "Lakeway Pickleball Club",
+    "address": "105 Cross Creek, Lakeway, TX 78734",
+    "lat": 30.3633,
+    "lng": -97.9794,
+    "phone": "(512) 555-0205",
+    "numberOfCourts": 10,
+    "surfaceType": "outdoor",
+    "amenities": ["lights", "restrooms", "water", "parking", "pro-shop", "snack-bar"],
+    "operatingHours": {
+      "mon": { "open": "06:00", "close": "22:00" },
+      "tue": { "open": "06:00", "close": "22:00" },
+      "wed": { "open": "06:00", "close": "22:00" },
+      "thu": { "open": "06:00", "close": "22:00" },
+      "fri": { "open": "06:00", "close": "23:00" },
+      "sat": { "open": "06:00", "close": "23:00" },
+      "sun": { "open": "07:00", "close": "21:00" }
+    }
+  },
+  {
+    "id": "6",
+    "name": "Brushy Creek Sports Park",
+    "address": "2310 Brushy Creek Rd, Cedar Park, TX 78613",
+    "lat": 30.5067,
+    "lng": -97.8003,
+    "phone": "(512) 401-5500",
+    "numberOfCourts": 4,
+    "surfaceType": "outdoor",
+    "amenities": ["lights", "restrooms", "parking"],
+    "operatingHours": {
+      "mon": { "open": "07:00", "close": "21:00" },
+      "tue": { "open": "07:00", "close": "21:00" },
+      "wed": { "open": "07:00", "close": "21:00" },
+      "thu": { "open": "07:00", "close": "21:00" },
+      "fri": { "open": "07:00", "close": "21:00" },
+      "sat": { "open": "07:00", "close": "20:00" },
+      "sun": { "open": "08:00", "close": "19:00" }
+    }
+  },
+  {
+    "id": "7",
+    "name": "Round Rock Indoor Sports",
+    "address": "2400 Chisholm Trail Rd, Round Rock, TX 78681",
+    "lat": 30.5217,
+    "lng": -97.6922,
+    "phone": "(512) 555-0307",
+    "numberOfCourts": 6,
+    "surfaceType": "indoor",
+    "amenities": ["lights", "restrooms", "water", "parking", "pro-shop"],
+    "operatingHours": {
+      "mon": { "open": "08:00", "close": "21:00" },
+      "tue": { "open": "08:00", "close": "21:00" },
+      "wed": { "open": "08:00", "close": "21:00" },
+      "thu": { "open": "08:00", "close": "21:00" },
+      "fri": { "open": "08:00", "close": "22:00" },
+      "sat": { "open": "08:00", "close": "22:00" },
+      "sun": { "open": "09:00", "close": "19:00" }
+    }
+  },
+  {
+    "id": "8",
+    "name": "Mueller Pickleball Courts",
+    "address": "4550 Mueller Blvd, Austin, TX 78723",
+    "lat": 30.2983,
+    "lng": -97.7056,
+    "phone": "(512) 974-6800",
+    "numberOfCourts": 5,
+    "surfaceType": "outdoor",
+    "amenities": ["lights", "restrooms", "water", "parking"],
+    "operatingHours": {
+      "mon": { "open": "06:00", "close": "22:00" },
+      "tue": { "open": "06:00", "close": "22:00" },
+      "wed": { "open": "06:00", "close": "22:00" },
+      "thu": { "open": "06:00", "close": "22:00" },
+      "fri": { "open": "06:00", "close": "22:00" },
+      "sat": { "open": "06:00", "close": "22:00" },
+      "sun": { "open": "07:00", "close": "21:00" }
+    }
+  },
+  {
+    "id": "9",
+    "name": "Dove Springs Recreation Center",
+    "address": "5801 Ainez Dr, Austin, TX 78744",
+    "lat": 30.1988,
+    "lng": -97.7378,
+    "phone": "(512) 974-3860",
+    "numberOfCourts": 2,
+    "surfaceType": "outdoor",
+    "amenities": ["restrooms", "water", "parking"],
+    "operatingHours": {
+      "mon": { "open": "08:00", "close": "19:00" },
+      "tue": { "open": "08:00", "close": "19:00" },
+      "wed": { "open": "08:00", "close": "19:00" },
+      "thu": { "open": "08:00", "close": "19:00" },
+      "fri": { "open": "08:00", "close": "19:00" },
+      "sat": { "open": "09:00", "close": "17:00" },
+      "sun": { "open": "09:00", "close": "17:00" }
+    }
+  },
+  {
+    "id": "10",
+    "name": "Westlake Pickleball Center",
+    "address": "4100 Westbank Dr, Austin, TX 78746",
+    "lat": 30.2948,
+    "lng": -97.8142,
+    "phone": "(512) 555-0410",
+    "numberOfCourts": 12,
+    "surfaceType": "indoor",
+    "amenities": ["lights", "restrooms", "water", "parking", "pro-shop", "snack-bar", "lockers"],
+    "operatingHours": {
+      "mon": { "open": "05:00", "close": "23:00" },
+      "tue": { "open": "05:00", "close": "23:00" },
+      "wed": { "open": "05:00", "close": "23:00" },
+      "thu": { "open": "05:00", "close": "23:00" },
+      "fri": { "open": "05:00", "close": "23:00" },
+      "sat": { "open": "06:00", "close": "22:00" },
+      "sun": { "open": "06:00", "close": "22:00" }
+    }
+  }
+]

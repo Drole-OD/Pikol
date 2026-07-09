@@ -1,0 +1,24 @@
+[
+  {
+    "id": "0746aecf-ec17-401c-b867-e4eca496e97d",
+    "name": "Alex",
+    "email": "alex@test.com",
+    "password": "test123",
+    "createdAt": "2026-07-08T13:04:03.826Z"
+  },
+  {
+    "id": "c87fade6-475b-46d8-b80c-c24cbd593741",
+    "name": "Kirb",
+    "email": "kirb@gmail.com",
+    "password": "1234qwer",
+    "createdAt": "2026-07-08T13:04:39.878Z"
+  },
+  {
+    "id": "dda7518a-7eea-486c-9232-397779186a46",
+    "name": "Sam Owner",
+    "email": "sam@test.com",
+    "password": "test123",
+    "role": "owner",
+    "createdAt": "2026-07-08T13:25:27.620Z"
+  }
+]

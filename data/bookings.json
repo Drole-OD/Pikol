@@ -1,0 +1,33 @@
+[
+  {
+    "id": "3d929f92-6fb4-4dac-b9a3-a08b8ec02459",
+    "courtId": "1",
+    "date": "2026-07-09",
+    "startTime": "07:00",
+    "endTime": "08:00",
+    "playerName": "Alex",
+    "userId": "0746aecf-ec17-401c-b867-e4eca496e97d",
+    "createdAt": "2026-07-08T13:35:33.132Z"
+  },
+  {
+    "id": "40fdd37e-dd5b-4139-8aad-26374d0b7340",
+    "courtId": "1",
+    "date": "2026-07-08",
+    "startTime": "07:00",
+    "endTime": "08:00",
+    "playerName": "Test User",
+    "userId": "test1",
+    "createdAt": "2026-07-08T23:21:17.454Z"
+  },
+  {
+    "id": "0207cff1-79b5-4570-934b-b219f4ca9d4f",
+    "courtId": "1",
+    "courtNumber": 1,
+    "date": "2026-07-08",
+    "startTime": "07:00",
+    "endTime": "08:00",
+    "playerName": "Test User",
+    "userId": "test1",
+    "createdAt": "2026-07-08T23:26:38.705Z"
+  }
+]
