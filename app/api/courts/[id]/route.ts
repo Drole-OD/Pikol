@@ -32,9 +32,9 @@ export async function GET(
   const dayKey = getDayKey(d);
   const hours = court.operatingHours[dayKey];
 
-  const operatingSlots = TIME_SLOTS.filter(
-    (s) => s.start >= hours.open && s.end <= hours.close
-  );
+  const operatingSlots = hours.closed
+    ? []
+    : TIME_SLOTS.filter((s) => s.start >= hours.open && s.end <= hours.close);
 
   if (courtNumber) {
     const cn = parseInt(courtNumber);

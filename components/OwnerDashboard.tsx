@@ -7,6 +7,7 @@ import { ArrowLeftIcon, XIcon, CameraIcon, LocateIcon } from "@/components/icons
 interface DayHours {
   open: string;
   close: string;
+  closed?: boolean;
 }
 
 interface OperatingHours {
@@ -261,6 +262,16 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
     const hours = defaultHours();
     for (const key of DAY_KEYS) hours[key] = { open, close };
     setForm((f) => ({ ...f, operatingHours: hours }));
+  };
+
+  const toggleDayClosed = (day: keyof OperatingHours, closed: boolean) => {
+    setForm((f) => ({
+      ...f,
+      operatingHours: {
+        ...f.operatingHours,
+        [day]: { ...f.operatingHours[day], closed },
+      },
+    }));
   };
 
   const toggleAmenity = (value: string) => {
@@ -759,48 +770,63 @@ export default function OwnerDashboard({ user }: OwnerDashboardProps) {
             </div>
           ) : (
             <div className="space-y-2">
-              {DAY_KEYS.map((day) => (
-                <div key={day} className="flex items-center gap-2">
-                  <span className="w-24 text-xs text-gray-600">
-                    {DAY_LABELS[day]}
-                  </span>
-                  <input
-                    type="time"
-                    value={form.operatingHours[day].open}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        operatingHours: {
-                          ...f.operatingHours,
-                          [day]: {
-                            ...f.operatingHours[day],
-                            open: e.target.value,
+              {DAY_KEYS.map((day) => {
+                const isClosed = !!form.operatingHours[day].closed;
+                return (
+                  <div key={day} className="flex items-center gap-2">
+                    <span className="w-24 text-xs text-gray-600">
+                      {DAY_LABELS[day]}
+                    </span>
+                    <input
+                      type="time"
+                      value={form.operatingHours[day].open}
+                      disabled={isClosed}
+                      onChange={(e) =>
+                        setForm((f) => ({
+                          ...f,
+                          operatingHours: {
+                            ...f.operatingHours,
+                            [day]: {
+                              ...f.operatingHours[day],
+                              open: e.target.value,
+                            },
                           },
-                        },
-                      }))
-                    }
-                    className="px-2 py-1.5 border border-gray-300 rounded-md text-xs text-gray-800"
-                  />
-                  <span className="text-gray-400 text-xs">to</span>
-                  <input
-                    type="time"
-                    value={form.operatingHours[day].close}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        operatingHours: {
-                          ...f.operatingHours,
-                          [day]: {
-                            ...f.operatingHours[day],
-                            close: e.target.value,
+                        }))
+                      }
+                      className="px-2 py-1.5 border border-gray-300 rounded-md text-xs text-gray-800 disabled:opacity-40 disabled:bg-gray-50"
+                    />
+                    <span className="text-gray-400 text-xs">to</span>
+                    <input
+                      type="time"
+                      value={form.operatingHours[day].close}
+                      disabled={isClosed}
+                      onChange={(e) =>
+                        setForm((f) => ({
+                          ...f,
+                          operatingHours: {
+                            ...f.operatingHours,
+                            [day]: {
+                              ...f.operatingHours[day],
+                              close: e.target.value,
+                            },
                           },
-                        },
-                      }))
-                    }
-                    className="px-2 py-1.5 border border-gray-300 rounded-md text-xs text-gray-800"
-                  />
-                </div>
-              ))}
+                        }))
+                      }
+                      className="px-2 py-1.5 border border-gray-300 rounded-md text-xs text-gray-800 disabled:opacity-40 disabled:bg-gray-50"
+                    />
+                    <label className="flex items-center gap-1.5 text-xs text-gray-500 ml-2">
+                      <input
+                        type="checkbox"
+                        checked={isClosed}
+                        onChange={(e) =>
+                          toggleDayClosed(day, e.target.checked)
+                        }
+                      />
+                      Closed
+                    </label>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export interface DayHours {
   open: string;
   close: string;
+  closed?: boolean;
 }
 
 export interface OperatingHours {
@@ -207,6 +208,7 @@ export function isCourtOpenNow(court: Court): boolean {
   const now = new Date();
   const dayKey = getDayKey(now);
   const hours = court.operatingHours[dayKey];
+  if (hours.closed) return false;
   const currentTime = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
   return currentTime >= hours.open && currentTime < hours.close;
 }
@@ -219,6 +221,7 @@ export function getAvailableSlotsCount(
   const d = new Date(date + "T00:00:00");
   const dayKey = getDayKey(d);
   const hours = court.operatingHours[dayKey];
+  if (hours.closed) return 0;
   const courtBookings = bookings.filter((b) => b.courtId === court.id);
 
   let count = 0;

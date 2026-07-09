@@ -53,11 +53,14 @@ interface CourtDetail {
   numberOfCourts: number;
   surfaceType: string;
   amenities: string[];
-  operatingHours: Record<string, { open: string; close: string }>;
+  operatingHours: Record<
+    string,
+    { open: string; close: string; closed?: boolean }
+  >;
   images: string[];
   units: CourtUnit[];
   slots: SlotInfo[];
-  hoursToday: { open: string; close: string };
+  hoursToday: { open: string; close: string; closed?: boolean };
 }
 
 const AMENITY_LABELS: Record<string, string> = {
@@ -422,8 +425,12 @@ export default function CourtDetailPanel({
                     }`}
                   >
                     <span>{DAY_LABELS[day]}</span>
-                    <span>
-                      {formatTime(hours.open)} – {formatTime(hours.close)}
+                    <span
+                      className={hours.closed ? "text-gray-400" : undefined}
+                    >
+                      {hours.closed
+                        ? "Closed"
+                        : `${formatTime(hours.open)} – ${formatTime(hours.close)}`}
                     </span>
                   </div>
                 );
@@ -573,6 +580,8 @@ export default function CourtDetailPanel({
                   <p className="text-xs text-gray-500">
                     {loading ? (
                       "Loading availability..."
+                    ) : court.hoursToday.closed ? (
+                      "Closed on this day"
                     ) : (
                       <>
                         <span className="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse mr-1" />
@@ -589,29 +598,35 @@ export default function CourtDetailPanel({
                     )}
                   </p>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {court.slots.map((slot) => (
-                    <button
-                      key={slot.start}
-                      disabled={!slot.available}
-                      onClick={() => {
-                        if (slot.available) setBookingSlot(slot);
-                      }}
-                      className={`text-xs py-2 px-3 rounded-md font-medium transition-colors ${
-                        slot.available
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
-                          : "bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed line-through"
-                      }`}
-                      title={
-                        slot.bookedBy
-                          ? `Booked by ${slot.bookedBy}`
-                          : "Available"
-                      }
-                    >
-                      {formatTime(slot.start)} – {formatTime(slot.end)}
-                    </button>
-                  ))}
-                </div>
+                {court.hoursToday.closed ? (
+                  <p className="text-xs text-gray-400 text-center py-4 border border-gray-200 rounded-lg">
+                    This court is closed on the selected day.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    {court.slots.map((slot) => (
+                      <button
+                        key={slot.start}
+                        disabled={!slot.available}
+                        onClick={() => {
+                          if (slot.available) setBookingSlot(slot);
+                        }}
+                        className={`text-xs py-2 px-3 rounded-md font-medium transition-colors ${
+                          slot.available
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+                            : "bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed line-through"
+                        }`}
+                        title={
+                          slot.bookedBy
+                            ? `Booked by ${slot.bookedBy}`
+                            : "Available"
+                        }
+                      >
+                        {formatTime(slot.start)} – {formatTime(slot.end)}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
