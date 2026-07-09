@@ -1,6 +1,6 @@
 {
-  "name": "PickleBook - Court Booking",
-  "short_name": "PickleBook",
+  "name": "Pikol - Court Booking",
+  "short_name": "Pikol",
   "description": "Book your pickleball court in seconds",
   "start_url": "/",
   "display": "standalone",
